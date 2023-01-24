@@ -1,29 +1,44 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <title>ESP IOT DASHBOARD</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="http://cdn.rawgit.com/Mikhus/canvas-gauges/gh-pages/download/2.1.7/all/gauge.min.js"></script>
-  </head>
-  <body>
+</head>
+
+<body>
     <div class="topnav">
-      <h1>ESP WEB SERVER GAUGES</h1>
+        <h1>ESP WEB SERVER GAUGES</h1>
     </div>
     <div class="content">
-      <div class="card-grid">
-        <div class="card">
-          <p class="card-title">Temperature</p>
-          <canvas id="gauge-temperature"></canvas>
+        <div class="card-grid">
+            <div class="card">
+                <p class="card-title">Light - Lux</p>
+                <canvas id="gauge-lux"></canvas>
+            </div>
+            <div class="card">
+                <p class="card-title">Soil Moisture</p>
+                <canvas id="gauge-soil"></canvas>
+            </div>
+            <div class="card">
+                <p class="card-title">Temperature</p>
+                <canvas id="gauge-temperature"></canvas>
+            </div>
+            <div class="card">
+                <p class="card-title">Humidity</p>
+                <canvas id="gauge-humidity"></canvas>
+            </div>
+            <div class="card">
+                <p class="card-title">Battery</p>
+                <canvas id="gauge-battery"></canvas>
+            </div>
         </div>
-        <div class="card">
-          <p class="card-title">Humidity</p>
-          <canvas id="gauge-humidity"></canvas>
-        </div>
-      </div>
     </div>
     <script src="script.js"></script>
-  </body>
+</body>
+
 </html>
