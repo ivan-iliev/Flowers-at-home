@@ -1,0 +1,522 @@
+<!DOCTYPE HTML>
+<html>
+
+
+<head>
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/css/bootstrap-extended.min.css">
+    <link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/fonts/simple-line-icons/style.min.css">
+    <link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/css/colors.min.css">
+    <link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        body {
+            min-width: 310px;
+            max-width: 800px;
+            height: 400px;
+            margin: 0 auto;
+        }
+        
+        h2 {
+            font-family: Arial;
+            font-size: 2.5rem;
+            text-align: center;
+        }
+        
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <img src="logo.png" alt="Flowers At Home" width="100%" height="auto" class="center">
+    <div id="chart-temperature" class="container"></div>
+    <div id="chart-humidity" class="container"></div>
+    <div id="chart-light" class="container"></div>
+    <div id="chart-soil" class="container"></div>
+    <div id="chart-salt" class="container"></div>
+
+    <div class="row">
+        <div class="col-xl-3 col-sm-6 col-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="media d-flex">
+                            <div class="align-self-center">
+                                <i class="icon-speedometer success font-large-2 float-left"></i>
+                            </div>
+                            <div class="media-body text-right">
+                                <h3 id="temp-card"></h3>
+                                <span>Temperature</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="media d-flex">
+                            <div class="align-self-center">
+                                <i class="icon-umbrella success font-large-2 float-left"></i>
+                            </div>
+                            <div class="media-body text-right">
+                                <h3 id="hum-card"></h3>
+                                <span>Humidity</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="media d-flex">
+                            <div class="align-self-center">
+                                <i class="icon-bulb success font-large-2 float-left"></i>
+                            </div>
+                            <div class="media-body text-right">
+                                <h3 id="lux-card"></h3>
+                                <span>Light</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="media d-flex">
+                            <div class="align-self-center">
+                                <i class="icon-drop success font-large-2 float-left"></i>
+                            </div>
+                            <div class="media-body text-right">
+                                <h3 id="soil-card"></h3>
+                                <span>Soil Moisture</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="media d-flex">
+                            <div class="align-self-center">
+                                <i class="icon-layers success font-large-2 float-left"></i>
+                            </div>
+                            <div class="media-body text-right">
+                                <h3 id="salt-card"></h3>
+                                <span>Soil Fertility</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-sm-6 col-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="media d-flex">
+                            <div class="align-self-center">
+                                <i class="icon-energy success font-large-2 float-left"></i>
+                            </div>
+                            <div class="media-body text-right">
+                                <h3 id="battery-card"></h3>
+                                <span>Battery</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+<script>
+    var chartT = new Highcharts.Chart({
+        chart: {
+            renderTo: 'chart-temperature'
+        },
+        title: {
+            text: 'DHT11 Temperature'
+        },
+        series: [{
+            showInLegend: false,
+            data: []
+        }],
+        plotOptions: {
+            line: {
+                animation: true,
+                dataLabels: {
+                    enabled: true
+                }
+            },
+            series: {
+                color: '#059e8a'
+            }
+        },
+        xAxis: {
+            type: 'datetime',
+            dateTimeLabelFormats: {
+                second: '%H:%M:%S'
+            }
+        },
+        yAxis: {
+            title: {
+                text: 'Temperature (Celsius)'
+            }
+            //title: { text: 'Temperature (Fahrenheit)' }
+        },
+        credits: {
+            enabled: false
+        }
+    });
+    setInterval(function() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var x = (new Date()).getTime(),
+                    y = parseFloat(this.responseText);
+                //console.log(this.responseText);
+                if (chartT.series[0].data.length > 40) {
+                    chartT.series[0].addPoint([x, y], true, true, true);
+                } else {
+                    chartT.series[0].addPoint([x, y], true, false, true);
+                }
+            }
+        };
+        xhttp.open("GET", "/temperature", true);
+        xhttp.send();
+    }, 10000);
+
+    var tempCard = document.getElementById('temp-card');
+    setInterval(function() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var x = (new Date()).getTime(),
+                    y = parseFloat(this.responseText);
+                tempCard.innerHTML = y + ' C';
+
+            }
+        };
+        xhttp.open("GET", "/temperature", true);
+        xhttp.send();
+    }, 10000);
+
+    var chartH = new Highcharts.Chart({
+        chart: {
+            renderTo: 'chart-humidity'
+        },
+        title: {
+            text: 'DHT11 Humidity'
+        },
+        series: [{
+            showInLegend: false,
+            data: []
+        }],
+        plotOptions: {
+            line: {
+                animation: true,
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        xAxis: {
+            type: 'datetime',
+            dateTimeLabelFormats: {
+                second: '%H:%M:%S'
+            }
+        },
+        yAxis: {
+            title: {
+                text: 'Humidity (%)'
+            }
+        },
+        credits: {
+            enabled: false
+        }
+    });
+    setInterval(function() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var x = (new Date()).getTime(),
+                    y = parseFloat(this.responseText);
+                //console.log(this.responseText);
+                if (chartH.series[0].data.length > 40) {
+                    chartH.series[0].addPoint([x, y], true, true, true);
+                } else {
+                    chartH.series[0].addPoint([x, y], true, false, true);
+                }
+            }
+        };
+        xhttp.open("GET", "/humidity", true);
+        xhttp.send();
+    }, 10000);
+
+    var humCard = document.getElementById('hum-card');
+    setInterval(function() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var x = (new Date()).getTime(),
+                    y = parseFloat(this.responseText);
+                humCard.innerHTML = y + ' %';
+
+            }
+        };
+        xhttp.open("GET", "/humidity", true);
+        xhttp.send();
+    }, 10000);
+
+    var chartP = new Highcharts.Chart({
+        chart: {
+            renderTo: 'chart-light'
+        },
+        title: {
+            text: 'BH1750 Light'
+        },
+        series: [{
+            showInLegend: false,
+            data: []
+        }],
+        plotOptions: {
+            line: {
+                animation: true,
+                dataLabels: {
+                    enabled: true
+                }
+            },
+            series: {
+                color: '#18009c'
+            }
+        },
+        xAxis: {
+            type: 'datetime',
+            dateTimeLabelFormats: {
+                second: '%H:%M:%S'
+            }
+        },
+        yAxis: {
+            title: {
+                text: 'Light (Lux)'
+            }
+        },
+        credits: {
+            enabled: false
+        }
+    });
+    setInterval(function() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var x = (new Date()).getTime(),
+                    y = parseFloat(this.responseText);
+                //console.log(this.responseText);
+                if (chartP.series[0].data.length > 40) {
+                    chartP.series[0].addPoint([x, y], true, true, true);
+                } else {
+                    chartP.series[0].addPoint([x, y], true, false, true);
+                }
+            }
+        };
+        xhttp.open("GET", "/light", true);
+        xhttp.send();
+    }, 10000);
+
+    var lightCard = document.getElementById('lux-card');
+    setInterval(function() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var x = (new Date()).getTime(),
+                    y = parseFloat(this.responseText);
+                lightCard.innerHTML = y + ' Lux';
+
+            }
+        };
+        xhttp.open("GET", "/light", true);
+        xhttp.send();
+    }, 10000);
+
+    var chartS = new Highcharts.Chart({
+        chart: {
+            renderTo: 'chart-soil'
+        },
+        title: {
+            text: 'DHT11 Soil Moisture'
+        },
+        series: [{
+            showInLegend: false,
+            data: []
+        }],
+        plotOptions: {
+            line: {
+                animation: true,
+                dataLabels: {
+                    enabled: true
+                }
+            },
+            series: {
+                color: '#059e8a'
+            }
+        },
+        xAxis: {
+            type: 'datetime',
+            dateTimeLabelFormats: {
+                second: '%H:%M:%S'
+            }
+        },
+        yAxis: {
+            title: {
+                text: 'Moisture (%)'
+            }
+            //title: { text: 'Temperature (Fahrenheit)' }
+        },
+        credits: {
+            enabled: false
+        }
+    });
+
+    setInterval(function() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var x = (new Date()).getTime(),
+                    y = parseFloat(this.responseText);
+                //console.log(this.responseText);
+                if (chartS.series[0].data.length > 40) {
+                    chartS.series[0].addPoint([x, y], true, true, true);
+                } else {
+                    chartS.series[0].addPoint([x, y], true, false, true);
+                }
+            }
+        };
+        xhttp.open("GET", "/soil", true);
+        xhttp.send();
+    }, 10000);
+
+    var soilCard = document.getElementById('soil-card');
+    setInterval(function() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var x = (new Date()).getTime(),
+                    y = parseFloat(this.responseText);
+                soilCard.innerHTML = y + ' %';
+
+            }
+        };
+        xhttp.open("GET", "/soil", true);
+        xhttp.send();
+    }, 10000);
+
+    var chartSalt = new Highcharts.Chart({
+        chart: {
+            renderTo: 'chart-salt'
+        },
+        title: {
+            text: 'DHT11 Soil Salt/Fertility'
+        },
+        series: [{
+            showInLegend: false,
+            data: []
+        }],
+        plotOptions: {
+            line: {
+                animation: true,
+                dataLabels: {
+                    enabled: true
+                }
+            },
+            series: {
+                color: '#059e8a'
+            }
+        },
+        xAxis: {
+            type: 'datetime',
+            dateTimeLabelFormats: {
+                second: '%H:%M:%S'
+            }
+        },
+        yAxis: {
+            title: {
+                text: 'Salt (%)'
+            }
+            //title: { text: 'Temperature (Fahrenheit)' }
+        },
+        credits: {
+            enabled: false
+        }
+    });
+
+    setInterval(function() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var x = (new Date()).getTime(),
+                    y = parseFloat(this.responseText);
+                //console.log(this.responseText);
+                if (chartSalt.series[0].data.length > 40) {
+                    chartSalt.series[0].addPoint([x, y], true, true, true);
+                } else {
+                    chartSalt.series[0].addPoint([x, y], true, false, true);
+                }
+            }
+        };
+        xhttp.open("GET", "/salt", true);
+        xhttp.send();
+    }, 10000);
+
+    var saltCard = document.getElementById('salt-card');
+    setInterval(function() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var x = (new Date()).getTime(),
+                    y = parseFloat(this.responseText);
+                saltCard.innerHTML = y + ' %';
+
+            }
+        };
+        xhttp.open("GET", "/salt", true);
+        xhttp.send();
+    }, 10000);
+
+    var batteryCard = document.getElementById('battery-card');
+    setInterval(function() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var x = (new Date()).getTime(),
+                    y = parseFloat(this.responseText);
+                batteryCard.innerHTML = y + ' %';
+
+            }
+        };
+        xhttp.open("GET", "/battery", true);
+        xhttp.send();
+    }, 10000);
+</script>
+
+</html>
