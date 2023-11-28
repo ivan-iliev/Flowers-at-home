@@ -181,7 +181,7 @@ void setup() {
 
   res = wm.autoConnect("Flowers At Home", "password"); // password protected ap
 
-  //wm.resetSettings();
+  wm.resetSettings();
 
 
   if (!res) {
